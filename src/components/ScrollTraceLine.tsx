@@ -2,7 +2,7 @@
 
 import { useEffect, useLayoutEffect, useState } from "react";
 
-const GAP_PX = 10;
+const GAP_PX = 20;
 
 /**
  * Fixed rail whose fill tracks scroll progress. Sits just left of `main` text (same column as content).
