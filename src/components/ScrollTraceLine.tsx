@@ -1,12 +1,38 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+
+const GAP_PX = 12;
 
 /**
- * Fixed left rail whose fill height tracks scroll progress — neon gradient + glow.
+ * Fixed rail whose fill tracks scroll progress. Sits just left of `main` text (same column as content).
  */
 export function ScrollTraceLine() {
   const [progress, setProgress] = useState(0);
+  const [leftPx, setLeftPx] = useState(24);
+
+  useLayoutEffect(() => {
+    const main = document.querySelector("main");
+    if (!main) return;
+
+    const updateLeft = () => {
+      const rect = main.getBoundingClientRect();
+      const pl = parseFloat(getComputedStyle(main).paddingLeft) || 0;
+      const isSm = window.matchMedia("(min-width: 640px)").matches;
+      const lineW = isSm ? 6 : 4;
+      const x = rect.left + pl - GAP_PX - lineW;
+      setLeftPx(Math.max(8, x));
+    };
+
+    updateLeft();
+    const ro = new ResizeObserver(updateLeft);
+    ro.observe(main);
+    window.addEventListener("resize", updateLeft);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", updateLeft);
+    };
+  }, []);
 
   useEffect(() => {
     let raf = 0;
@@ -39,10 +65,12 @@ export function ScrollTraceLine() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none fixed inset-y-0 left-0 z-40 flex h-screen"
+      className="pointer-events-none fixed inset-y-0 z-40 h-screen w-1 sm:w-1.5"
+      style={{
+        left: `max(${Math.round(leftPx)}px, env(safe-area-inset-left, 0px))`,
+      }}
     >
-      <div className="shrink-0" style={{ width: "env(safe-area-inset-left, 0px)" }} />
-      <div className="relative h-full w-1 sm:w-1.5">
+      <div className="relative h-full w-full">
         <div className="absolute inset-0 bg-gradient-to-b from-white/[0.07] via-white/[0.02] to-white/[0.07]" />
 
         <div
