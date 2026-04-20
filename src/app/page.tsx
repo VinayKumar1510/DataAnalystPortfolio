@@ -1,3 +1,4 @@
+import { ScrollTraceLine } from "@/components/ScrollTraceLine";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
@@ -15,6 +16,7 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0),rgba(0,0,0,0.5),rgba(0,0,0,1))]" />
       </div>
 
+      <ScrollTraceLine />
       <Navbar />
       <main className="mx-auto max-w-6xl px-5 sm:px-6 pb-24">
         <Hero />
